@@ -22,7 +22,7 @@
    ```Bash
    pip install -r requirements.txt
    ```
-3. Create files: `.env` and and create variable `TELEGRAM_TOKEN=YOUR_TOKEN`
+3. Create file: `.env` and and create variable `TELEGRAM_TOKEN=YOUR_TOKEN`
 
 ## Hosting
 I use [heroku](https://www.heroku.com/) as hosting.
