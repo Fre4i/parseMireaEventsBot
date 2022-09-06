@@ -8,6 +8,10 @@ from keyboards import inline_button
 
 
 async def command_start(message: types.Message):
+    # first message from user
+    if not await sqlite.sql_get_user(message.chat.id):
+        await sqlite.sql_users_add_command(message.chat.id, 1)
+
     # get info from db using user id
     data_users = await sqlite.sql_get_user(message.chat.id)
     on_or_off = f'включены' if data_users[0][1] == 1 else f'выключены'
