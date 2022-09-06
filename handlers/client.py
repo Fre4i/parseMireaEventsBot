@@ -20,7 +20,6 @@ async def command_start(message: types.Message):
                  '<b>Данный бот умеет:</b>\n' \
                  '/show_all_events <b>— показать все мероприятия</b>\n' \
                  '/show_this_day_events <b>— показать все сегодняшние мероприятия</b>\n' \
-                 '/show_this_month_events <b>— показать мероприятия этого месяца</b>\n' \
                  f'/enable_notifications <b>— включить/выключить напоминания о мероприятиях в 8:30 утра</b> (сейчас уведомления <b>{on_or_off})</b>\n' \
                  '/help <b>— инструкция по боту</b>'
 
@@ -100,9 +99,6 @@ async def command_show_this_day_events(message: types.Message):
             text_mes = f'<b>Дата — </b>{el[1]}\n{el[0]}\n\n{el[3]}'
             inline_keyboard = await inline_button.inline_keyboard_markup(el[2])
             await bot.send_message(message.chat.id, text_mes, reply_markup=inline_keyboard, parse_mode='html')
-
-    if text_mes == '':
-        await bot.send_message(message.chat.id, 'На сегодня мероприятий нет :)')
 
 
 async def command_enable_notifications(message: types.Message):
