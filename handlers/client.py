@@ -77,19 +77,6 @@ async def command_show_all_events(message: types.Message):
 async def command_show_this_day_events(message: types.Message):
     data = await sqlite.sql_get_events_info()
 
-    # text_mes = ''
-    # current_date = f'{date.today().day if (len(str(date.today().day)) == 2) else "0" + str(date.today().month)}.{date.today().month if (len(str(date.today().month)) == 2) else "0" + str(date.today().month)}.{date.today().year}'
-    #
-    # for el in data:
-    #     if el[1] == current_date:
-    #         text_mes += f'<b>Дата — </b>{el[1]}\n{el[0]}\n\n{el[3]}\n\n<b>Ссылка —</b> {el[2]}\n\n'
-    #
-    # if text_mes == '':
-    #     await bot.send_message(message.chat.id, 'На сегодня мероприятий нет :)')
-    # else:
-    #     await bot.send_message(message.chat.id, text_mes, parse_mode='html')
-
-
     # card messages with inline url event button
     # str current date
     text_mes = ''
@@ -99,6 +86,9 @@ async def command_show_this_day_events(message: types.Message):
             text_mes = f'<b>Дата — </b>{el[1]}\n{el[0]}\n\n{el[3]}'
             inline_keyboard = await inline_button.inline_keyboard_markup(el[2])
             await bot.send_message(message.chat.id, text_mes, reply_markup=inline_keyboard, parse_mode='html')
+
+    if text_mes == '':
+        await bot.send_message(message.chat.id, 'На сегодня мероприятий нет :)')
 
 
 async def command_enable_notifications(message: types.Message):
