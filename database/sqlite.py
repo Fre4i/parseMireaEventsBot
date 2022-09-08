@@ -46,6 +46,9 @@ async def sql_users_update(id):
 
 
 async def sql_add_events_info_record(header, date, link, event_desc):
+    header = header.replace('"', "'")
+    link = link.replace('"', "'")
+    event_desc = event_desc.replace('"', "'")
     cur.execute(f'INSERT OR IGNORE INTO events_info VALUES ("{header}", "{date}", "{link}","{event_desc}")')
     base.commit()
 
