@@ -13,22 +13,13 @@ from keyboards import inline_button
 async def event_message():
     data = await sqlite.sql_get_events_info()
 
-    list_mes = ''
-    current_date = f'{date.today().day if (len(str(date.today().day)) == 2) else "0" + str(date.today().month)}.{date.today().month if (len(str(date.today().month)) == 2) else "0" + str(date.today().month)}.{date.today().year}'
-
-    # for el in data:
-    #     if el[1] == current_date:
-    #         text_mes += f'<b>Дата — </b>{el[1]}\n{el[0]}\n\n{el[2]}\n\n<b>Ссылка —</b> {el[3]}\n\n'
-    #
-    # if text_mes == '':
-    #     text_mes = 'На сегодня мероприятий нет :)'
-    #
-    # text_mes += f'/enable_notifications <b>— включить/выключить напоминания о мероприятиях в 8:30 утра</b>'
-
-
     # card messages with inline url event button
     list_mes = []
-    current_date = f'{date.today().day if (len(str(date.today().day)) == 2) else "0" + str(date.today().month)}.{date.today().month if (len(str(date.today().month)) == 2) else "0" + str(date.today().month)}.{date.today().year}'
+    current_date = f'{date.today().day if (len(str(date.today().day)) == 2) else "0" + str(date.today().day)}.' \
+                   f'{date.today().month if (len(str(date.today().month)) == 2) else "0" + str(date.today().month)}.' \
+                   f'{date.today().year}'
+
+    print(len(data))
     for el in data:
         if el[1] == current_date:
             list_mes.append(
@@ -37,6 +28,7 @@ async def event_message():
 
     if len(list_mes) == 0:
         list_mes.append('На сегодня мероприятий нет :)')
+        return
 
     result = await sqlite.sql_users_query()
     for user in result:
@@ -60,12 +52,13 @@ def get_data():
 
     # get json
     response = requests.get(url=url).json()
-
     list = []
 
+    i = 0
     # parsing json
     for event in response:
         if isinstance(event, dict):
+            i+=1
             # print(event['title'])
             if len(event["month"]) == 1:
                 day = event['day']
@@ -78,6 +71,7 @@ def get_data():
                 date = f'{day}.{event["month"]}.{event["year"]}'
                 list.append([event['title'], date, event['url']])
 
+    print(i)
     return sorted(list, key=lambda x: (datetime.strptime(x[1], '%d.%m.%Y'), x[0]))
 
 
@@ -90,6 +84,7 @@ def get_event_text(url):
 
 
 async def download_info_events():
+    await sqlite.sql_drop_events_info()
     # get info from json
     data = get_data()
 
@@ -101,5 +96,4 @@ async def download_info_events():
         if date(year, month, day) >= date.today():
             url = f'https://www.mirea.ru{el[2]}'
             text_news = get_event_text(url)
-            # print(text_news)
             await sqlite.sql_add_events_info_record(el[0], el[1], url, text_news[1:])

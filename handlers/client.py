@@ -80,7 +80,9 @@ async def command_show_this_day_events(message: types.Message):
     # card messages with inline url event button
     # str current date
     text_mes = ''
-    current_date = f'{date.today().day if (len(str(date.today().day)) == 2) else "0" + str(date.today().month)}.{date.today().month if (len(str(date.today().month)) == 2) else "0" + str(date.today().month)}.{date.today().year}'
+    current_date = f'{date.today().day if (len(str(date.today().day)) == 2) else "0" + str(date.today().day)}.' \
+                   f'{date.today().month if (len(str(date.today().month)) == 2) else "0" + str(date.today().month)}.' \
+                   f'{date.today().year}'
     for el in data:
         if el[1] == current_date:
             text_mes = f'<b>Дата — </b>{el[1]}\n{el[0]}\n\n{el[3]}'
