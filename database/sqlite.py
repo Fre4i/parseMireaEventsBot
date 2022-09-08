@@ -11,7 +11,8 @@ def sql_start():
     base.execute('CREATE TABLE IF NOT EXISTS users(user_id TEXT PRIMARY KEY, notify_enable INTEGER NOT NULL)')
     # events_info db
     base.execute(
-        'CREATE TABLE IF NOT EXISTS events_info(header TEXT NOT NULL, date TEXT NOT NULL, link TEXT NOT NULL, event_desc TEXT NOT NULL)')
+        'CREATE TABLE IF NOT EXISTS events_info(header TEXT NOT NULL, date TEXT NOT NULL, link TEXT NOT NULL, event_desc TEXT NOT NULL,'
+        'PRIMARY KEY(header, link, event_desc))')
 
     base.commit()
 
@@ -56,3 +57,13 @@ async def sql_add_events_info_record(header, date, link, event_desc):
 async def sql_get_events_info():
     res = cur.execute(f'SELECT * FROM events_info')
     return res.fetchall()
+
+
+async def sql_drop_events_info():
+    base.execute(f'DROP TABLE events_info')
+    base.commit()
+
+    base.execute(
+        'CREATE TABLE IF NOT EXISTS events_info(header TEXT NOT NULL, date TEXT NOT NULL, link TEXT NOT NULL, event_desc TEXT NOT NULL,'
+        'PRIMARY KEY(header, link, event_desc))')
+    base.commit()
